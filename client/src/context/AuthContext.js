@@ -9,16 +9,18 @@ export function AuthProvider({ children }) {
   // On app load, check if token exists
   useEffect(() => {
     const token = localStorage.getItem("token")
-    if (token) {
+    const userData = localStorage.getItem("user")
+
+    if (token && userData) {
       setIsLoggedIn(true)
-      // Fetch user data from API
-      setUser({ name: "User" })
+      setUser(JSON.parse(userData)) // ✅ properly restore user
     }
   }, [])
 
   // login : save token and update state
   function login(token, userData) {
     localStorage.setItem("token", token)
+    localStorage.setItem("user", JSON.stringify(userData)) // ✅ save user
     setIsLoggedIn(true)
     setUser(userData)
   }

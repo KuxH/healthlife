@@ -36,7 +36,13 @@ export default function AuthPage() {
       if (isLogin) {
         // Only login on actual login
         login(data.token, data.user)
-        navigate("/")
+        localStorage.setItem("role", data.user.role) // Optional, for quick access
+
+        if (data.user.role === "admin") {
+          navigate("/admin")
+        } else {
+          navigate("/")
+        }
       } else {
         // After signup, show success and switch to login form
         alert("Signup successful! Please log in.")

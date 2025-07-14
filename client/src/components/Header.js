@@ -31,7 +31,7 @@ export default function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
-          {["/", "/services", "/about", "/contact", "/doctors"].map((path) => (
+          {["/", "/services", "/contact", "/doctors"].map((path) => (
             <Link
               key={path}
               to={path}
@@ -43,12 +43,21 @@ export default function Header() {
             </Link>
           ))}
 
-          {isLoggedIn && (
+          {/* {isLoggedIn && user?.role !== "admin" && (
             <Link
               to="/book-appointment"
               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
               Book Appointment
+            </Link>
+          )} */}
+
+          {isLoggedIn && user?.role === "admin" && (
+            <Link
+              to="/admin"
+              className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+            >
+              Admin Dashboard
             </Link>
           )}
 
@@ -91,7 +100,7 @@ export default function Header() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden px-4 py-4">
-          {["/", "/services", "/about", "/contact", "/doctors"].map((path) => (
+          {["/", "/services", "/contact", "/doctors"].map((path) => (
             <Link
               key={path}
               to={path}
@@ -106,13 +115,24 @@ export default function Header() {
 
           {isLoggedIn ? (
             <>
-              <Link
-                to="/book-appointment"
-                className="block py-2 border-b text-blue-600"
-                onClick={handleLinkClick}
-              >
-                Book Appointment
-              </Link>
+              {user?.role === "admin" ? (
+                <Link
+                  to="/admin"
+                  className="block py-2 border-b text-purple-600"
+                  onClick={handleLinkClick}
+                >
+                  Admin Dashboard
+                </Link>
+              ) : (
+                <Link
+                  to="/book-appointment"
+                  className="block py-2 border-b text-blue-600"
+                  onClick={handleLinkClick}
+                >
+                  Book Appointment
+                </Link>
+              )}
+
               <button
                 onClick={() => {
                   handleLogout()

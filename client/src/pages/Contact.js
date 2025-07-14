@@ -31,7 +31,7 @@ Contact Number: ${contactNumber}
 Location: ${location}
 Message: ${message}`
 
-    const whatsappNumber = "9779811557810"
+    const whatsappNumber = ""
     const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
       whatsappMessage
     )}`
@@ -80,22 +80,9 @@ Message: ${message}`
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:underline"
                 >
-                  Baneshwor, Kathmandu
+                  Tikathali,Lalitpur
                 </a>
               </p>
-            </div>
-
-            <div className="rounded-xl overflow-hidden shadow-md">
-              <iframe
-                title="Clinic Location"
-                width="100%"
-                height="300"
-                frameBorder="0"
-                className="w-full h-72"
-                style={{ border: 0 }}
-                src="https://www.google.com/maps/embed/v1/place?q=Baneshwor,+Kathmandu,+Nepal&key=YOUR_API_KEY"
-                allowFullScreen
-              ></iframe>
             </div>
           </div>
 

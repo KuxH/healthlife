@@ -10,6 +10,7 @@ router.post("/signup", async (req, res) => {
   console.log(" /signup route called")
 
   const { name, email, password } = req.body
+
   try {
     const existingUser = await User.findOne({ email })
     if (existingUser)
@@ -17,12 +18,23 @@ router.post("/signup", async (req, res) => {
         .status(400)
         .json({ success: false, error: "Email already exists" })
 
-    const user = new User({ name, email, password })
+    // ✅ Automatically assign 'admin' role if email is in admin list
+    const adminEmails = process.env.ADMIN_EMAILS?.split(",") || []
+    const role = adminEmails.includes(email) ? "admin" : "user"
+
+    const user = new User({ name, email, password, role })
     await user.save()
 
-    res
-      .status(201)
-      .json({ success: true, message: "User created successfully" })
+    res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    })
   } catch (err) {
     res.status(500).json({ success: false, error: err.message })
   }

@@ -5,6 +5,19 @@ const Doctor = require("../../models/doctor")
 const { protect, isAdmin } = require("../../middleware/auth")
 
 router.use(protect, isAdmin) // protect all admin routes
+const multer = require("multer")
+const path = require("path")
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/")
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname))
+  },
+})
+
+const upload = multer({ storage })
 
 // GET all doctors (admin)
 router.get("/", async (req, res) => {
@@ -17,7 +30,7 @@ router.get("/", async (req, res) => {
 })
 
 // POST create new doctor (admin)
-router.post("/", async (req, res) => {
+router.post("/", upload.single("photo"), async (req, res) => {
   const {
     name,
     specialization,
@@ -28,6 +41,8 @@ router.post("/", async (req, res) => {
     contact,
     availability,
   } = req.body
+
+  const photo = req.file ? `/uploads/${req.file.filename}` : ""
 
   try {
     const existing = await Doctor.findOne({ nmcNumber })
@@ -46,6 +61,7 @@ router.post("/", async (req, res) => {
       bio,
       contact,
       availability,
+      photo,
     })
 
     await doctor.save()

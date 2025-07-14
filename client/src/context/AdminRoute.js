@@ -2,16 +2,18 @@ import React, { useContext } from "react"
 import { Navigate } from "react-router-dom"
 import { AuthContext } from "../context/AuthContext"
 
-const ProtectedRoute = ({ children }) => {
-  const { isLoggedIn } = useContext(AuthContext)
+const AdminRoute = ({ children }) => {
+  const { isLoggedIn, user } = useContext(AuthContext)
 
   if (!isLoggedIn) {
-    // Redirect to login page if user is not logged in
     return <Navigate to="/auth" replace />
   }
 
-  // If logged in, render the child component(s)
+  if (user?.role !== "admin") {
+    return <Navigate to="/" replace />
+  }
+
   return children
 }
 
-export default ProtectedRoute
+export default AdminRoute

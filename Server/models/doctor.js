@@ -34,14 +34,10 @@ const doctorSchema = new mongoose.Schema(
         trim: true,
       },
     },
-    reviews: [
-      {
-        patientName: { type: String, required: true },
-        rating: { type: Number, min: 1, max: 5, required: true },
-        comment: { type: String },
-        date: { type: Date, default: Date.now },
-      },
-    ],
+    photo: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 )
@@ -50,14 +46,6 @@ doctorSchema.index({
   name: "text",
   specialization: "text",
   qualifications: "text",
-})
-
-doctorSchema.virtual("averageRating").get(function () {
-  if (this.reviews?.length > 0) {
-    const total = this.reviews.reduce((sum, r) => sum + r.rating, 0)
-    return Math.round((total / this.reviews.length) * 10) / 10
-  }
-  return 0
 })
 
 module.exports = mongoose.model("Doctor", doctorSchema)

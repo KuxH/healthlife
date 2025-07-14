@@ -1,26 +1,34 @@
 const jwt = require("jsonwebtoken")
+const User = require("../models/user") // Optional: if you want to fetch full user info
 const JWT_SECRET = process.env.JWT_SECRET || "yoursecretkey"
 
 // Middleware: check if user is authenticated
-const protect = (req, res, next) => {
-  let token = req.headers.authorization
+const protect = async (req, res, next) => {
+  let token
 
-  if (!token || !token.startsWith("Bearer ")) {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      token = req.headers.authorization.split(" ")[1]
+      const decoded = jwt.verify(token, JWT_SECRET)
+
+      // Optional: Fetch full user if needed
+      req.user = decoded
+      // req.user = await User.findById(decoded.id).select("-password")
+
+      next()
+    } catch (err) {
+      console.error("Token verification failed:", err.message)
+      return res
+        .status(401)
+        .json({ success: false, error: "Not authorized, token failed" })
+    }
+  } else {
     return res
       .status(401)
       .json({ success: false, error: "Not authorized, no token" })
-  }
-
-  token = token.split(" ")[1]
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET)
-    req.user = decoded // contains id, name, email, role
-    next()
-  } catch (err) {
-    return res
-      .status(401)
-      .json({ success: false, error: "Not authorized, token failed" })
   }
 }
 

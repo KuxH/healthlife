@@ -62,7 +62,7 @@ function Footer() {
             className="hover:text-blue-300 transition"
             title="View location"
           >
-            📍 Baneshwor, Kathmandu
+            📍 Tikathali,Lalitpur
           </a>
         </div>
 
